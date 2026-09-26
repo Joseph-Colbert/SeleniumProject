@@ -15,7 +15,7 @@ public class LoginPage extends BasePage {
 
     public void login(String userName, String password) {
         waitForElement(userNameInput).sendKeys(userName);
-        driver.findElement(passwordInput).sendKeys(password);
-        driver.findElement(loginButton).click();
+        waitForElement(passwordInput).sendKeys(password);
+        waitForElementToBeClickable(loginButton).click();
     }
 }

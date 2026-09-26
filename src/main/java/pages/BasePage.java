@@ -11,16 +11,26 @@ import java.time.Duration;
 public class BasePage {
 
     protected WebDriver driver;
-    protected WebDriverWait wait;
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     protected WebElement waitForElement(By element) {
-        return wait.until(
-                ExpectedConditions.visibilityOfElementLocated(element)
-        );
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(element));
+    }
+
+    protected WebElement waitForElementToBeClickable(By element) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        return wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    protected boolean isElementDisplayed(By element) {
+        try {
+            return waitForElement(element).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
