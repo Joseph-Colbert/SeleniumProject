@@ -31,5 +31,24 @@
             <version>7.11.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Genera el reporte HTML que alimenta ReportListener. -->
+        <dependency>
+            <groupId>com.aventstack</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>5.1.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Ejecuta las pruebas de TestNG durante mvn test. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>
