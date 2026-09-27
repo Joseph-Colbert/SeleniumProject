@@ -1,6 +1,7 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -29,7 +30,16 @@ public class AddEmployeePage extends BasePage {
         waitForElementToBeClickable(addButton).click();
         waitForElement(firstNameInput).sendKeys(firstName);
         waitForElement(lastNameInput).sendKeys(lastName);
-        employeeIdValue = waitForElement(employeeIdInput).getAttribute("value");
+        WebElement employeeId = waitForElement(employeeIdInput);
+        // El ID propuesto por la demo puede estar ocupado. Las teclas actualizan
+        // también el estado del formulario, a diferencia de clear() en este campo.
+        employeeId.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
+        // Un valor basado en el tiempo reduce las colisiones entre ejecuciones.
+        employeeIdValue = Long.toString(System.currentTimeMillis() % 100_000_000L);
+        employeeId.sendKeys(employeeIdValue);
+        if (!employeeIdValue.equals(employeeId.getAttribute("value"))) {
+            throw new IllegalStateException("No se pudo asignar un ID único al empleado");
+        }
         waitForElementToBeClickable(loginDetailsButton).click();
         waitForElement(userNameInput).sendKeys(userName);
         waitForElement(passwordInput);

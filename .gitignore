@@ -1,4 +1,6 @@
 target/
+# Las capturas se generan al ejecutar tests y no se versionan.
+src/test/resources/logs/screenshots/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
