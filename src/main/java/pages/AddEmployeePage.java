@@ -31,10 +31,8 @@ public class AddEmployeePage extends BasePage {
         waitForElement(firstNameInput).sendKeys(firstName);
         waitForElement(lastNameInput).sendKeys(lastName);
         WebElement employeeId = waitForElement(employeeIdInput);
-        // El ID propuesto por la demo puede estar ocupado. Las teclas actualizan
-        // también el estado del formulario, a diferencia de clear() en este campo.
+        // Para recuperar la ID exacta
         employeeId.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
-        // Un valor basado en el tiempo reduce las colisiones entre ejecuciones.
         employeeIdValue = Long.toString(System.currentTimeMillis() % 100_000_000L);
         employeeId.sendKeys(employeeIdValue);
         if (!employeeIdValue.equals(employeeId.getAttribute("value"))) {

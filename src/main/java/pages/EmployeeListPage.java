@@ -8,7 +8,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-/** Acciones de la lista PIM para localizar un empleado ya creado. */
 public class EmployeeListPage extends BasePage {
 
     private final By pimMenu = By.cssSelector("a[href='/web/index.php/pim/viewPimModule']");

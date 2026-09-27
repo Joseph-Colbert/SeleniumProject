@@ -5,7 +5,7 @@ import enums.MaritalStatus;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class AditionalInformationPage extends BasePage {
+public class AdditionalInformationPage extends BasePage {
 
     private final By driverLicenceInput =
             By.xpath("//label[contains(normalize-space(),\"Driver's License Number\")]/following::input[1]");
@@ -26,7 +26,7 @@ public class AditionalInformationPage extends BasePage {
     private final By successMessage =
             By.xpath("//p[contains(@class,'oxd-text--toast-message')]");
 
-    public AditionalInformationPage(WebDriver driver) {
+    public AdditionalInformationPage(WebDriver driver) {
         super(driver);
     }
 

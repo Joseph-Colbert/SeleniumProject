@@ -16,28 +16,22 @@ public class BaseTest {
     private final String browser = System.getProperty("browser", "chrome");
     private final String url = "https://opensource-demo.orangehrmlive.com/";
 
-    // TestNG abre un navegador nuevo antes de cada conjunto de datos.
     @BeforeMethod
     public void setUp() {
-
         switch (browser) {
-
             case "chrome":
                 driver = new ChromeDriver(
                         chromeSinGestorDeContrasenas()
                 );
                 break;
-
             case "firefox":
                 driver = new FirefoxDriver();
                 break;
-
             default:
                 throw new IllegalArgumentException(
                         browser + " not supported"
                 );
         }
-
         driver.get(url);
         driver.manage().window().maximize();
     }
@@ -52,15 +46,14 @@ public class BaseTest {
         opciones.addArguments("--disable-features=PasswordLeakDetection,AutofillServerCommunication");
         return opciones;
     }
+
     // El listener necesita el navegador para tomar una captura si el test falla.
     public WebDriver getDriver() {
         return driver;
     }
 
-    // alwaysRun asegura el cierre incluso cuando el test falla.
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
-
         if (driver != null) {
             driver.quit();
         }
