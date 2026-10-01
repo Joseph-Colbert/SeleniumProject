@@ -104,6 +104,8 @@ La suite `testng.xml` configura la ejecución del mismo caso de prueba en:
 
 `BaseTest` recibe el navegador definido en la suite e inicializa el WebDriver correspondiente.
 
+De esta manera, el mismo flujo automatizado puede ser validado en ambos navegadores desde una única suite de ejecución.
+
 ## Requisitos
 
 Para ejecutar el proyecto se necesita:
@@ -132,9 +134,17 @@ mvn clean test
 
 Maven Surefire ejecutará la suite definida en `testng.xml`, realizando el flujo automatizado en Firefox y Chrome.
 
-## Reportes
+## Reportes y evidencias
 
-El reporte HTML generado por **ExtentReports** se encuentra en:
+El proyecto utiliza **ExtentReports** para generar un reporte HTML con los resultados de las pruebas.
+
+Después de ejecutar:
+
+```bash
+mvn clean test
+```
+
+el reporte generado se encuentra en:
 
 ```text
 target/reports/ExtentReport.html
@@ -148,16 +158,52 @@ Las capturas se almacenan en:
 src/test/resources/logs/screenshots/
 ```
 
-El directorio `target/` y las capturas generadas durante las pruebas se excluyen del repositorio mediante `.gitignore`.
+El directorio `target/` contiene archivos generados automáticamente durante la ejecución y se encuentra excluido del repositorio mediante `.gitignore`.
 
 ### Evidencia compartida de la ejecución
 
-La ejecución del 30 de septiembre de 2026 terminó con **2 pruebas aprobadas, 0 fallidas y 0 omitidas** (una en Firefox y una en Chrome). Para que se pueda revisar en GitHub sin subir todo `target/`, se guardó una copia del [reporte HTML](evidencias/2026-09-30/ExtentReport.html) y del [resumen de TestNG](evidencias/2026-09-30/TestSuite.txt) en `evidencias/2026-09-30/`.
+Para conservar una evidencia de la ejecución y permitir su revisión desde el repositorio, se incluye:
 
-Estas son copias de esa ejecución. Para generar resultados nuevos, ejecuta `mvn clean test` y consulta los archivos actualizados en `target/`.
+```text
+evidencias/
+└── 2026-09-30/
+    ├── ExtentReport.html
+    └── TestSuite.txt
+```
+
+La ejecución registrada el **30 de septiembre de 2026** terminó con **2 pruebas aprobadas, 0 fallidas y 0 omitidas**, correspondientes a la ejecución del flujo automatizado en Firefox y Chrome.
+
+Los archivos disponibles son:
+
+- [Reporte HTML de ExtentReports](evidencias/2026-09-30/ExtentReport.html)
+- [Resumen de ejecución de TestNG](evidencias/2026-09-30/TestSuite.txt)
+
+`ExtentReport.html` contiene el reporte generado por ExtentReports, mientras que `TestSuite.txt` conserva el resumen de la ejecución de la suite.
+
+Estos archivos corresponden a una copia de la ejecución registrada. Para generar resultados nuevos, se debe ejecutar nuevamente:
+
+```bash
+mvn clean test
+```
+
+Los resultados actualizados se generarán dentro del directorio `target/`.
 
 ## Foto y licencia del empleado
 
-La prueba sube la imagen genérica `src/test/resources/images/test-avatar.png` durante el alta. Después de guardar, comprueba que la ficha muestre la imagen y vuelve a comprobarla al recargar la página.
+Durante el alta del empleado, la prueba utiliza la imagen genérica:
 
-Las fechas de licencia y nacimiento siguen el formato que muestra OrangeHRM: `yyyy-dd-mm`. El número de licencia se escribe después de los demás campos, se guarda y se verifica de nuevo tras recargar la ficha. La prueba espera a que OrangeHRM termine de cargar los datos antes de hacer esa comprobación.
+```text
+src/test/resources/images/test-avatar.png
+```
+
+Después de guardar el empleado, se valida que la ficha muestre la imagen y se vuelve a comprobar después de recargar la página.
+
+Las fechas de licencia y nacimiento utilizan el formato mostrado por OrangeHRM:
+
+```text
+yyyy-dd-mm
+```
+
+El número de licencia se registra junto con la información adicional del empleado y posteriormente se valida nuevamente después de recargar la ficha.
+
+La automatización utiliza esperas para asegurar que OrangeHRM haya terminado de cargar la información antes de realizar las comprobaciones.
