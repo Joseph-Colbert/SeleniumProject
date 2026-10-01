@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.time.Duration;
 
@@ -32,5 +34,25 @@ public class BasePage {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // Espera utilizada por Firefox
+    protected void clickElement(By element) {
+        WebElement webElement = waitForElementToBeClickable(element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", webElement);
+        try {
+            webElement.click();
+        } catch (ElementClickInterceptedException e) {
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].click();",
+                    webElement
+            );
+        }
+    }
+
+    // Espera utilizada por Firefox
+    protected void waitForElementToDisappear(By element) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(element));
     }
 }

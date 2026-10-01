@@ -38,7 +38,8 @@ public class AddEmployeePage extends BasePage {
         if (!employeeIdValue.equals(employeeId.getAttribute("value"))) {
             throw new IllegalStateException("No se pudo asignar un ID único al empleado");
         }
-        waitForElementToBeClickable(loginDetailsButton).click();
+        //Espera utilizada por Firefox
+        clickElement(loginDetailsButton);
         waitForElement(userNameInput).sendKeys(userName);
         waitForElement(passwordInput);
         List<WebElement> passwords = driver.findElements(passwordInput);

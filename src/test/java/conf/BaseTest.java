@@ -1,9 +1,13 @@
+package conf;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,29 +15,32 @@ import java.util.Map;
 public class BaseTest {
 
     protected WebDriver driver;
-
-    // -Dbrowser=firefox para cambiar el navegador.
-    private final String browser = System.getProperty("browser", "chrome");
     private final String url = "https://opensource-demo.orangehrmlive.com/";
 
     @BeforeMethod
-    public void setUp() {
-        switch (browser) {
+    @Parameters({"browser"})
+    public void setUp(@Optional("chrome") String browser) throws Exception {
+        System.out.println("NAVEGADOR RECIBIDO: " + browser);
+        switch (browser.toLowerCase()) {
             case "chrome":
-                driver = new ChromeDriver(
-                        chromeSinGestorDeContrasenas()
-                );
+                driver = new ChromeDriver(chromeSinGestorDeContrasenas());
                 break;
             case "firefox":
                 driver = new FirefoxDriver();
                 break;
-            default:
-                throw new IllegalArgumentException(
-                        browser + " not supported"
-                );
+            default: throw new Exception(browser + " no soportado");
         }
-        driver.get(url);
         driver.manage().window().maximize();
+        driver.get(url);
+    }
+
+    /*
+     * Permite que ReportListener obtenga el driver
+     * para realizar capturas de pantalla cuando
+     * una prueba falla.
+     */
+    public WebDriver getDriver() {
+        return driver;
     }
 
     private ChromeOptions chromeSinGestorDeContrasenas() {
@@ -47,12 +54,7 @@ public class BaseTest {
         return opciones;
     }
 
-    // El listener necesita el navegador para tomar una captura si el test falla.
-    public WebDriver getDriver() {
-        return driver;
-    }
-
-    @AfterMethod(alwaysRun = true)
+    @AfterMethod
     public void tearDown() {
         if (driver != null) {
             driver.quit();

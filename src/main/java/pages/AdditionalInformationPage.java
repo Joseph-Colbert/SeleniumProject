@@ -25,6 +25,9 @@ public class AdditionalInformationPage extends BasePage {
             By.xpath("//button[@type='submit' and normalize-space()='Save']");
     private final By successMessage =
             By.xpath("//p[contains(@class,'oxd-text--toast-message')]");
+    //Por Firefox
+    private final By formLoader =
+            By.className("oxd-form-loader");
 
     public AdditionalInformationPage(WebDriver driver) {
         super(driver);
@@ -35,6 +38,7 @@ public class AdditionalInformationPage extends BasePage {
     }
 
     private void selectOption(By dropdown, String option) {
+        waitForElementToDisappear(formLoader);
         waitForElementToBeClickable(dropdown).click();
         waitForElementToBeClickable(optionByText(option)).click();
     }

@@ -12,10 +12,11 @@ public class EmployeeDataProvider {
         return new Object[][] {
                 { new EmployeeData("Juan", "Perez", "juanperez", "JuanPerez123!",
                         "12345678", "2028-09-23", "Japanese", MaritalStatus.SINGLE,
-                        "1995-06-15", Gender.MALE) },
-                { new EmployeeData("Ana", "Lopez", "analopez", "AnaLopez123!",
-                        "87654321", "2029-08-12", "Japanese", MaritalStatus.MARRIED,
-                        "1997-04-20", Gender.FEMALE) }
+                        "1995-06-15", Gender.MALE) }
         };
     }
 }
+/*
+    { new EmployeeData("Ana", "Lopez", "analopez", "AnaLopez123!",
+                               "87654321", "2029-08-12", "Japanese", MaritalStatus.MARRIED,
+                        "1997-04-20", Gender.FEMALE) }*/

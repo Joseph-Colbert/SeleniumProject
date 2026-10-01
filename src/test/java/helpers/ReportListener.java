@@ -1,7 +1,8 @@
+package helpers;
+
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
-import helpers.ReportManager;
-import helpers.ScreenshotHelper;
+import conf.BaseTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;

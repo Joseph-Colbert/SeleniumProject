@@ -3,6 +3,8 @@ package data;
 import enums.Gender;
 import enums.MaritalStatus;
 
+import java.util.UUID;
+
 /** Datos necesarios para una ejecución completa del test de empleado. */
 public record EmployeeData(
         String firstName,
@@ -21,4 +23,17 @@ public record EmployeeData(
     public String toString() {
         return firstName + " " + lastName;
     }
+
+    public String uniqueUsername() {
+        return usernamePrefix
+                + UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .substring(0, 8);
+    }
 }
+
+
+
+
+
