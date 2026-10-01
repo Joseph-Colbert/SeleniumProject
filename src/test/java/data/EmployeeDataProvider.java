@@ -10,9 +10,10 @@ public class EmployeeDataProvider {
     @DataProvider(name = "empleados")
     public static Object[][] employees() {
         return new Object[][] {
+                // OrangeHRM pide las fechas como yyyy-dd-mm, según el placeholder del formulario.
                 { new EmployeeData("Juan", "Perez", "juanperez", "JuanPerez123!",
-                        "12345678", "2028-09-23", "Japanese", MaritalStatus.SINGLE,
-                        "1995-06-15", Gender.MALE) }
+                        "12345678", "2028-23-09", "Japanese", MaritalStatus.SINGLE,
+                        "1995-15-06", Gender.MALE) }
         };
     }
 }
