@@ -3,9 +3,18 @@ package pages;
 import enums.Gender;
 import enums.MaritalStatus;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class AdditionalInformationPage extends BasePage {
+    private final By employeeIdInput =
+            By.xpath("//label[normalize-space()='Employee Id']/following::input[1]");
 
     private final By driverLicenceInput =
             By.xpath("//label[contains(normalize-space(),\"Driver's License Number\")]/following::input[1]");
@@ -25,9 +34,7 @@ public class AdditionalInformationPage extends BasePage {
             By.xpath("//button[@type='submit' and normalize-space()='Save']");
     private final By successMessage =
             By.xpath("//p[contains(@class,'oxd-text--toast-message')]");
-    //Por Firefox
-    private final By formLoader =
-            By.className("oxd-form-loader");
+    private final By formLoader = By.cssSelector(".oxd-form-loader");
 
     public AdditionalInformationPage(WebDriver driver) {
         super(driver);
@@ -38,30 +45,75 @@ public class AdditionalInformationPage extends BasePage {
     }
 
     private void selectOption(By dropdown, String option) {
-        waitForElementToDisappear(formLoader);
-        waitForElementToBeClickable(dropdown).click();
-        waitForElementToBeClickable(optionByText(option)).click();
+        clickWhenReady(dropdown);
+        clickWhenReady(optionByText(option));
+    }
+
+    private void waitForFormReady() {
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+                ExpectedConditions.invisibilityOfElementLocated(formLoader));
+    }
+
+    private void clickWhenReady(By locator) {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .ignoring(ElementClickInterceptedException.class)
+                .until(webDriver -> {
+                    waitForFormReady();
+                    WebElement element = webDriver.findElement(locator);
+                    if (!element.isDisplayed() || !element.isEnabled()) {
+                        return false;
+                    }
+                    element.click();
+                    return true;
+                });
     }
 
     private void selectGender(Gender gender) {
         if (gender == Gender.MALE) {
-            waitForElementToBeClickable(genderMaleRadio).click();
+            clickWhenReady(genderMaleRadio);
         } else if (gender == Gender.FEMALE) {
-            waitForElementToBeClickable(genderFemaleRadio).click();
+            clickWhenReady(genderFemaleRadio);
         }
     }
 
-    public void aditionalInformation(String driverLicenceNumber, String expirationDate, String nationality, MaritalStatus maritalStatus, String dateOfBirth, Gender gender) {
-        waitForElement(driverLicenceInput).sendKeys(driverLicenceNumber);
-        waitForElement(expirationDateInput).sendKeys(expirationDate);
+    public void aditionalInformation(String employeeId, String driverLicenceNumber, String expirationDate, String nationality, MaritalStatus maritalStatus, String dateOfBirth, Gender gender) {
+        // El formulario aparece antes de terminar de cargar el empleado; esperamos sus datos.
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(webDriver ->
+                employeeId.equals(webDriver.findElement(employeeIdInput).getAttribute("value")));
+        waitForFormReady();
+        replaceValue(expirationDateInput, expirationDate);
         selectOption(nationalitySelect, nationality);
         selectOption(maritalStatusSelect, maritalStatus.toString());
-        waitForElement(dateOfBirthInput).sendKeys(dateOfBirth);
+        replaceValue(dateOfBirthInput, dateOfBirth);
         selectGender(gender);
-        waitForElementToBeClickable(saveButton).click();
+        // En OrangeHRM, cambios posteriores en fechas y selectores pueden restaurar
+        // el valor anterior de la licencia. Escribimos este campo al final.
+        replaceValue(driverLicenceInput, driverLicenceNumber);
+        waitForElement(driverLicenceInput).sendKeys(Keys.TAB);
+        // Detecta si el control ha rechazado el valor antes de intentar guardar.
+        if (!driverLicenceNumber.equals(waitForElement(driverLicenceInput).getAttribute("value"))) {
+            throw new IllegalStateException("El formulario no conservó el número de licencia");
+        }
+        clickWhenReady(saveButton);
+    }
+
+    private void replaceValue(By locator, String value) {
+        waitForFormReady();
+        WebElement input = waitForElement(locator);
+        input.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
+        input.sendKeys(value);
     }
 
     public boolean informationSavedSuccessfully() {
-        return isElementDisplayed(successMessage);
+        return new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+                ExpectedConditions.textToBePresentInElementLocated(successMessage, "Successfully Updated"));
+    }
+
+    public boolean licensePersisted(String employeeId, String licenseNumber) {
+        // Leer de nuevo desde el servidor evita confundir texto escrito con datos guardados.
+        driver.navigate().refresh();
+        return new WebDriverWait(driver, Duration.ofSeconds(10)).until(webDriver ->
+                employeeId.equals(webDriver.findElement(employeeIdInput).getAttribute("value"))
+                        && licenseNumber.equals(webDriver.findElement(driverLicenceInput).getAttribute("value")));
     }
 }

@@ -63,9 +63,15 @@ Project/
 │       │   └── test/
 │       │       └── PagesTest.java
 │       └── resources/
+│           ├── images/
+│           │   └── test-avatar.png
 │           └── logs/
 │               └── screenshots/
 │
+├── evidencias/
+│   └── 2026-09-30/
+│       ├── ExtentReport.html
+│       └── TestSuite.txt
 ├── .gitignore
 ├── pom.xml
 ├── README.md
@@ -143,3 +149,15 @@ src/test/resources/logs/screenshots/
 ```
 
 El directorio `target/` y las capturas generadas durante las pruebas se excluyen del repositorio mediante `.gitignore`.
+
+### Evidencia compartida de la ejecución
+
+La ejecución del 30 de septiembre de 2026 terminó con **2 pruebas aprobadas, 0 fallidas y 0 omitidas** (una en Firefox y una en Chrome). Para que se pueda revisar en GitHub sin subir todo `target/`, se guardó una copia del [reporte HTML](evidencias/2026-09-30/ExtentReport.html) y del [resumen de TestNG](evidencias/2026-09-30/TestSuite.txt) en `evidencias/2026-09-30/`.
+
+Estas son copias de esa ejecución. Para generar resultados nuevos, ejecuta `mvn clean test` y consulta los archivos actualizados en `target/`.
+
+## Foto y licencia del empleado
+
+La prueba sube la imagen genérica `src/test/resources/images/test-avatar.png` durante el alta. Después de guardar, comprueba que la ficha muestre la imagen y vuelve a comprobarla al recargar la página.
+
+Las fechas de licencia y nacimiento siguen el formato que muestra OrangeHRM: `yyyy-dd-mm`. El número de licencia se escribe después de los demás campos, se guarda y se verifica de nuevo tras recargar la ficha. La prueba espera a que OrangeHRM termine de cargar los datos antes de hacer esa comprobación.

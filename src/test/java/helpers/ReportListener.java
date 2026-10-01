@@ -4,9 +4,10 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import conf.BaseTest;
 import org.openqa.selenium.WebDriver;
-import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import org.testng.ISuite;
+import org.testng.ISuiteListener;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,11 +16,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /** Recibe los eventos de TestNG y los convierte en entradas del reporte HTML. */
-public class ReportListener implements ITestListener {
+public class ReportListener implements ITestListener, ISuiteListener {
 
     // Se crea un reporte para toda la ejecución de la suite.
     @Override
-    public void onStart(ITestContext context) {
+    public void onStart(ISuite suite) {
         ReportManager.startReport();
     }
 
@@ -28,7 +29,8 @@ public class ReportListener implements ITestListener {
         // El nombre incluye al empleado para distinguir las ejecuciones.
         String parameters = Stream.of(result.getParameters())
                 .map(String::valueOf).collect(Collectors.joining(", "));
-        String name = result.getMethod().getMethodName() + " (" + parameters + ")";
+        String name = result.getTestContext().getName() + " - "
+                + result.getMethod().getMethodName() + " (" + parameters + ")";
         ReportManager.startTest(name, result.getMethod().getDescription());
     }
 
@@ -70,7 +72,7 @@ public class ReportListener implements ITestListener {
     }
 
     @Override
-    public void onFinish(ITestContext context) {
+    public void onFinish(ISuite suite) {
         // flush escribe en disco los resultados acumulados.
         ReportManager.finishReport();
     }

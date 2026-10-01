@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -28,6 +29,8 @@ public class EmployeeListPage extends BasePage {
 
         // La tabla carga después de la búsqueda; esperamos una fila con los tres datos.
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // La tabla se reemplaza al terminar la búsqueda; repetimos la lectura si una fila caduca.
+        wait.ignoring(StaleElementReferenceException.class);
         return wait.until(webDriver -> {
             List<WebElement> rows = webDriver.findElements(resultRows);
             for (WebElement row : rows) {
